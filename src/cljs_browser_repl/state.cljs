@@ -13,12 +13,15 @@
   {:pre [(every? some? ((juxt :type :value :tx) e))]}
   (conj h e))
 
-(defn to-repl [o] (assoc o :tx (gen-tx)))
-(defn to-repl-input  [source] (to-repl {:type :input    :value source}))
-(defn to-repl-html   [html]   (to-repl {:type :html     :value html}))
-(defn to-repl-md     [md]     (to-repl {:type :markdown :value md}))
-(defn to-repl-error  [err]    (to-repl {:type :error    :value err}))
-(defn to-repl-result [resp]   (to-repl {:type :response :value resp}))
+(defn to-repl 
+  ([o] (assoc o :tx (gen-tx)))
+  ([t v] (to-repl {:type t :value v})))
+
+(defn to-repl-input  [source] (to-repl :input    source))
+(defn to-repl-html   [html]   (to-repl :html     html))
+(defn to-repl-md     [md]     (to-repl :markdown md))
+(defn to-repl-error  [err]    (to-repl :error    err))
+(defn to-repl-result [resp]   (to-repl :response resp))
 
 (def initial-history-messages
   [(to-repl-md "# Hi! Welcome to the web clojurescript repl
