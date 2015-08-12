@@ -8,7 +8,9 @@
 
 (defn new-input! 
   ([] (new-input! state/blank-input))
-  ([s] (reset! state/input s)))
+  ([s] 
+   (when (contains? state/types-for-user (:type s))
+     (reset! state/input s))))
 
 (defn repl-entry!
   ([code] (repl-entry! code true))
