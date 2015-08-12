@@ -15,7 +15,6 @@
 (defn repl-entry!
   ([code] (repl-entry! code true))
   ([{code :value code-type :type :as input} history?]
-   (println code code-type history?)
    (when-not (blank? code)
      ; Reset the current input
      (new-input!)
