@@ -4,7 +4,11 @@
 
 (declare history-entry)
 
-(defn history-input [{:keys [value]}]
+(defmulti render-history-entry
+  (fn [e] (get e :type)))
+
+(defmethod render-history-entry :input
+  [{:keys [value]}]
   [:div.history-input value])
 
 (defn- response-with-meta->entry [{:keys [value] :as entry}]
@@ -15,7 +19,8 @@
                     (:value value) value)]
     (with-meta (assoc entry :type sub-type :value new-value) nil)))
 
-(defn history-response [{:keys [value] :as entry}]
+(defmethod render-history-entry :response 
+  [{:keys [value] :as entry}]
   (let [sub-type (:type (meta value))]
     [:div.history-response
      {:class (if sub-type "" "history-response-cljs")}
@@ -23,28 +28,22 @@
        [history-entry nil (response-with-meta->entry entry)]
        (println-str value))]))
 
-(defn history-response-error [{:keys [value]}]
+(defmethod render-history-entry :error
+  [{:keys [value]}]
   [:div.history-response-error (.. value -cause -message)])
 
-(defn history-unknown [entry]
-  [:pre.history-unknown (println-str entry)])
-
-(defn history-html [{:keys [value]}]
+(defmethod render-history-entry :html [{:keys [value]}]
   [:div.history-html
    {:dangerouslySetInnerHTML {:__html value}}])
 
-(defn history-md [{:keys [value]}]
+(defmethod render-history-entry :markdown [{:keys [value]}]
   [:div.history-markdown
    {:dangerouslySetInnerHTML {:__html (md/render value)}}])
 
+(defmethod render-history-entry :default [entry]
+  [:pre.history-unknown (println-str entry)])
 
 (defn history-entry [{:keys [on-click]} entry]
   [:div.history-entry
    {:on-click #(on-click entry)}
-   [(case (:type entry)
-      :input history-input
-      :error history-response-error
-      :response history-response
-      :html history-html
-      :markdown history-md
-      history-unknown) entry]])
+   (render-history-entry entry)])
