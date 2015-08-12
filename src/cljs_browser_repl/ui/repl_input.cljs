@@ -1,5 +1,6 @@
 (ns cljs-browser-repl.ui.repl-input
-  (:require [clojure.string :as string]))
+  (:require [clojure.string :as string]
+            [cljs-browser-repl.state :as state]))
 
 (defn resize [node]
   (set! (.. node -style -height) "auto")
@@ -29,11 +30,7 @@
    [:select.repl-input-type
     {:value (:type value)
      :on-change #(on-change (assoc value :type (keyword (get-val %))))}
-    ;; FIXME have them as as records
-    (map (fn [[k v]] [:option {:key k :value k} v]) 
-         {:input "CLJS"
-          :markdown "MD"
-          :html "HTML"})]
+    (map (fn [[k v]] [:option {:key k :value k} v]) state/types-for-user)]
    (when (= (:type value) :input)
      [:span.repl-input-pre pre-label])
    [:textarea.repl-input-input
