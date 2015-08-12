@@ -10,5 +10,4 @@
   (go
     (let [gist (<! (gist/get! id))
           commands (gist/get-commands gist)]
-      (doseq [cmd commands]
-        (swap! state/history state/add-entry (state/to-repl cmd))))))
+      (reset! state/history (mapv state/to-repl commands)))))
