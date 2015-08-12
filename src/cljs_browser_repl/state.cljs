@@ -40,6 +40,6 @@
 
 ;; UI
 
-(defonce blank-input {:type :input :value ""})
+(defonce blank-input (to-repl-input ""))
 
 (defonce input (atom blank-input))
