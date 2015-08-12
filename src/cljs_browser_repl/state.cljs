@@ -8,6 +8,8 @@
 
 (defn to-repl [o] (assoc o :date (now)))
 (defn to-repl-input  [source] (to-repl {:type :input    :value source}))
+(defn to-repl-html   [html]   (to-repl {:type :html     :value html}))
+(defn to-repl-md     [md]     (to-repl {:type :markdown :value md}))
 (defn to-repl-error  [err]    (to-repl {:type :error    :value err}))
 (defn to-repl-result [resp]   (to-repl {:type :response :value resp}))
 
