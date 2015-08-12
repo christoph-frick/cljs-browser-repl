@@ -10,7 +10,7 @@
 
 (defn add-entry 
   [h e]
-  {:pre [(every? some? ((juxt :type :value :tx) e))]}
+  {:pre [(fn [e] (every? true? (map #(contains? e %) [:type :value :tx])))]}
   (conj h e))
 
 (defn to-repl 
