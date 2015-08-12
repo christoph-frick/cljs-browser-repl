@@ -9,18 +9,19 @@
   "Is an event the Enter key?"
   [e] (= (.-key e ) "Enter"))
 
-(defn get-val [e] (.. e -target -value))
+(defn shift? 
+  [e]
+  (boolean (.-shiftKey e)))
 
-(defn enter-pressed!
-  "When shift+enter adds a new line. When only enter if the input is valid it
-  runs the callback function and clears value and triggers the resize. If the
-  input is not valid i'll do as if it was a shift+enter"
-  [e valid? code type send-input]
-  (let [shift? (.-shiftKey e)]
-    (when (and (not shift?) valid?)
-      (send-input {:value code :type type}) ; FIXME
-      (.preventDefault e)
-      )))
+(defn ctrl? 
+  [e]
+  (boolean (.-ctrlKey e)))
+
+(defn submit-input-keys?
+  [e]
+  (every? true? ((juxt ctrl? enter?) e)))
+
+(defn get-val [e] (.. e -target -value))
 
 (defn- repl-input-raw
   [{:keys [pre-label on-change on-valid-input valid-input? value]}]
@@ -37,13 +38,15 @@
      [:span.repl-input-pre pre-label])
    [:textarea.repl-input-input
     {:on-key-down (fn [e]
-                    (when (enter? e)
-                      (let [c (string/trim (get-val e))
+                    (when (submit-input-keys? e)
+                      (let [v (string/trim (get-val e))
                             t (:type value)
-                            valid? (if (= t :input) (valid-input? c) true)] ; FIXME: there need to be some protocol around validating input per type
-                        (enter-pressed! e valid? c t on-valid-input))))
+                            valid? (if (= t :input) (valid-input? v) true) ; FIXME: there need to be some protocol around validating input per type 
+                            send-value {:value v :type t} ; FIXME
+                            ]
+                        (when valid? (on-valid-input send-value)))))
      :on-change #(on-change (assoc value :value (get-val %)))
-     :placeholder "Type clojurescript code here"
+     :placeholder "Type code here and press CTRL-Enter to submit"
      :rows 1
      :value (:value value)
      }]])
