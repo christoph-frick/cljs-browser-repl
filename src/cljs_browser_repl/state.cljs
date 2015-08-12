@@ -4,9 +4,16 @@
 ;; History
 
 (defn now [] (.now js/Date))
-(defn add-entry [h e] (conj h e))
 
-(defn to-repl [o] (assoc o :date (now)))
+(defn gen-tx []
+  (gensym (str "TX" (now))))
+
+(defn add-entry 
+  [h e]
+  {:pre [(every? some? ((juxt :type :value :tx) e))]}
+  (conj h e))
+
+(defn to-repl [o] (assoc o :tx (gen-tx)))
 (defn to-repl-input  [source] (to-repl {:type :input    :value source}))
 (defn to-repl-html   [html]   (to-repl {:type :html     :value html}))
 (defn to-repl-md     [md]     (to-repl {:type :markdown :value md}))
