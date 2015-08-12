@@ -40,11 +40,7 @@
 
 (defn history-entry [{:keys [on-click]} entry]
   [:div.history-entry
-   {:on-click #(on-click
-                 (let [sel (.toString (.getSelection js/window))
-                       value (if (string/blank? sel) (:value entry) sel)]
-                   (response-with-meta->entry
-                     (assoc entry :value value))))}
+   {:on-click #(on-click entry)}
    [(case (:type entry)
       :input history-input
       :error history-response-error

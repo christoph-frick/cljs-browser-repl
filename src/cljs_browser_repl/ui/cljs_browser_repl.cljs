@@ -10,7 +10,7 @@
 (defn cljs-browser-repl []
   [:div.cljs-browser-repl
    [top-bar]
-   [history {:on-entry-click #(new-input! (:value %))}
+   [history {:on-entry-click new-input!}
             @state/history]
    [repl-input {:pre-label (str @state/current-ns)
                 :valid-input? is-readable?

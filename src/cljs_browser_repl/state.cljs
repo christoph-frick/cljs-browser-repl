@@ -38,4 +38,6 @@
 
 ;; UI
 
-(defonce input (atom ""))
+(defonce blank-input {:type :input :value ""})
+
+(defonce input (atom blank-input))
