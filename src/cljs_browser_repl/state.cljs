@@ -13,24 +13,20 @@
 (defn to-repl-error  [err]    (to-repl {:type :error    :value err}))
 (defn to-repl-result [resp]   (to-repl {:type :response :value resp}))
 
-(def initial-history-message
-  (to-repl-input "(comment
+(def initial-history-messages
+  [(to-repl-md "# Hi! Welcome to the web clojurescript repl
 
-  Hi! Welcome to the web clojurescript repl.
+Enter any forms in the input at the bottom. Hit enter to evaluate.
 
-  Enter any forms in the input at the bottom. Hit enter to evaluate.
-
-  Here are some examples of things to try:
-
-    (doc inc)
-    (inc 5)
-    (- 5 3)
-    (defn square [x] (* x x))
-    (square 6)
-
-  Have fun!
-
-  )"))
+Here are some examples of things to try (click on the next entry and e.g. replace `comment` with `do`):")
+   (to-repl-input "(comment
+  (doc inc)
+  (inc 5)
+  (- 5 3)
+  (defn square [x] (* x x))
+  (square 6)
+)")
+   ])
 
 (defonce history (atom []))
 
