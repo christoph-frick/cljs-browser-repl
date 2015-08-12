@@ -23,6 +23,11 @@
 (defn to-repl-error  [err]    (to-repl :error    err))
 (defn to-repl-result [resp]   (to-repl :response resp))
 
+(def types-for-user
+  {:input "CLJS"
+   :markdown "MD"
+   :html "HTML"})
+
 (def initial-history-messages
   [(to-repl-md "# Hi! Welcome to the web clojurescript repl
 
